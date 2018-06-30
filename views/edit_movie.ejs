@@ -1,0 +1,39 @@
+<%- include layouts/header.ejs %>
+<script>
+    function cancelAdd(){
+     window.location.href = '/';
+    }
+  </script>
+        <div class="page-data">
+            
+            <form role="form" method="post" action="/edit/<%=data[0].title%>">
+                <table cellpadding="11">
+                <tr>
+                    <td class="label">Title</td><td>: <input type="text"  value="<%=data[0].title%>" name="title" required></td>
+                 </tr>
+                 <tr>
+                    <td class="label">Format</td><td>:<input type="text"  value="<%=data[0].format%>" name="format" ></td>
+                </tr>
+                <tr>
+                    <td class="label">Length</td><td>: <input type="number" value="<%=data[0].length%>" name="length" maxlength="1"></td>
+                 </tr>
+                <tr>
+                    <td class="label">Year Released</td><td>: <input type="number" value="<%=data[0].release_year%>" name="release_year" maxlength="4"></td>
+                 </tr>
+                 <tr>
+                    <td class="label">Rating</td><td>: <input type="number" value="<%=data[0].rating%>" name="rating" maxlength="1"></td>
+                 </tr>
+
+                 <tr>
+                    <td class="label"></td>
+                    <td>
+                        &nbsp; <input type="submit" name="submit" value="Save">
+                       <input type="button" name="cancel" value="Cancel" class="cancel" onClick="cancelAdd()">
+                    </td>
+                 </tr>
+                </table>
+            </form>
+            
+        </div>
+        
+<%- include layouts/footer.ejs %>

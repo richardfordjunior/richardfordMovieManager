@@ -1,0 +1,38 @@
+<%- include layouts/header.ejs %>
+		<script>
+		    function cancelAdd() {
+            window.location.href = '/';
+        }
+    </script>
+    <div class="page-data">
+
+        <form role="form" method="post" action="/add">
+                <table cellpadding="11 ">
+                <tr>
+                    <td class="label">Title</td><td>: <input type="text " name="title" required></td>
+                 </tr>
+                 <tr>
+                    <td class="label" valign="top">Format</td><td valign="top ">: <input type="text" name="format"></input></td>
+                </tr>
+                <tr>
+                    <td class="label">Length</td><td>: <input type="number" name="length"  maxlength="4"></td>
+                 </tr>
+                  <tr>
+                    <td class="label">Year Released</td><td>: <input type="number" name="release_year" maxlength="4"></td>
+                 </tr>
+                 <tr>
+                    <td class="label">Rating</td><td>: <input type="number" name="rating"  maxlength="1"></td>
+                     </tr>
+										 <tr>
+												<td class="label"></td>
+												<td>
+														&nbsp; <input type="submit" name="submit" value="Save">
+													 <input type="button" name="cancel" value="Cancel" class="cancel" onClick="cancelAdd()">
+												</td>
+										 </tr>
+                </table>
+            </form>
+            
+        </div>
+        
+<%- include layouts/footer.ejs %>

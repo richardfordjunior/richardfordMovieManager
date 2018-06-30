@@ -1,0 +1,59 @@
+<%- include layouts/header.ejs %>
+       <script>
+         function addMovie(){
+          window.location.href = '/add';
+         }
+         function cancelAdd(){
+          window.location.href = '/';
+         }
+       </script>
+        <div class="page-data">
+         <div class="data-btn">
+           <button onClick="addMovie();">+ Add Movie</button>
+         </div>
+         <div class="data-table">
+            <table border="1" cellpadding="7" cellspacing="7">
+                <tr>
+                    <th>Title</th>
+                    <th>Format</th>
+                    <th>Length</th>
+                    <th>Year Released</th>
+                    <th>Rating</th>
+                    <th>Last Updated</th>
+                    <th width="120px">Action</th>
+                </tr>
+                               
+                <% if(data.length){ 
+                                
+                 for(var i = 0;i < data.length;i++) { %>
+                 
+                <tr>
+                    <td><%=data[i].title%></td>
+                    <td><%=data[i].format%></td>
+                    <td><%=data[i].length%></td>
+                    <td><%=data[i].release_year%></td>
+                    <td><%=data[i].rating%></td>
+                    <td><%=data[i].lastUpdatedDate%></td>
+                    <td>
+                        <a class="a-inside edit" href="/edit/<%=data[i].title%>" >Edit</a>
+                       
+                        <a class="a-inside delete" href="/delete/<%=data[i].title%>">Delete</a>
+                       
+                    </td>
+                </tr>
+            <% }
+            
+             }else{ %>
+                 <tr>
+                    <td colspan="3">No Movies found.</td>
+                 </tr>
+            <% } %>
+                
+                              
+                
+            </table>
+          
+         </div>
+        </div>
+        
+<%- include layouts/footer.ejs %>
