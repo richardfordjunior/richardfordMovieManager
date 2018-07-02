@@ -1,0 +1,39 @@
+{
+  "name": "richardfordmoviemanager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richardfordjunior/richardfordMovieManager.git"
+  },
+  "author": "Richard Ford",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/richardfordjunior/richardfordMovieManager/issues"
+  },
+  "homepage": "https://github.com/richardfordjunior/richardfordMovieManager#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "bootstrap": "^3.3.7",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-flash": "0.0.2",
+    "express-myconnection": "^1.0.4",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.2.0",
+    "lodash": "^4.17.10",
+    "method-override": "^2.3.10",
+    "mongodb": "^3.1.0",
+    "mysql": "^2.15.0",
+    "nodemon": "^1.17.5",
+    "oclazyload": "^1.1.0",
+    "splash-screen": "^4.0.1"
+  }
+}
