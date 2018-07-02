@@ -1,38 +1,75 @@
 <%- include layouts/header.ejs %>
-		<script>
-		    function cancelAdd() {
-            window.location.href = '/';
+    <script>
+        function cancelAdd() {
+            window.location.href = '/movies';
+        }
+        function validateForm() {
+            var doc = document.forms["addForm"];
+            if (doc["title"].value.length > 50) {
+                alert("Title length must be less than 50 characters.");
+                window.location.href = '/add';
+                return false;
+            } else if (doc["length"].value.length > 500) {
+                alert("Film length must be less than 500 minutes.");
+                window.location.href = '/add';
+                return false;
+            } else if (doc["release_year"].value.length > 1800 && doc["release_year"].value.length < 2100) {
+                alert("Release Year must be between 1800 and 2100.");
+                window.location.href = '/add';
+                return false;
+            }
         }
     </script>
     <div class="page-data">
 
-        <form role="form" method="post" action="/add">
-                <table cellpadding="11 ">
+        <form role="form" method="POST" action="/add" name="addForm" onsubmit="return validateForm();">
+            <table cellpadding="11" class="table table-striped">
                 <tr>
-                    <td class="label">Title</td><td>: <input type="text " name="title" required></td>
-                 </tr>
-                 <tr>
-                    <td class="label" valign="top">Format</td><td valign="top ">: <input type="text" name="format"></input></td>
+                    <td class="label">Title</td>
+                    <td>Title:
+                        <input type="text " name="title" required>
+                    </td>
                 </tr>
                 <tr>
-                    <td class="label">Length</td><td>: <input type="number" name="length"  maxlength="4"></td>
-                 </tr>
-                  <tr>
-                    <td class="label">Year Released</td><td>: <input type="number" name="release_year" maxlength="4"></td>
-                 </tr>
-                 <tr>
-                    <td class="label">Rating</td><td>: <input type="number" name="rating"  maxlength="1"></td>
-                     </tr>
-										 <tr>
-												<td class="label"></td>
-												<td>
-														&nbsp; <input type="submit" name="submit" value="Save">
-													 <input type="button" name="cancel" value="Cancel" class="cancel" onClick="cancelAdd()">
-												</td>
-										 </tr>
-                </table>
-            </form>
-            
-        </div>
-        
-<%- include layouts/footer.ejs %>
+                    <td class="label" valign="top">Format</td>
+                    <td valign="top">Format:
+                        <select class="formatPicker" name="formatPicker">
+                            <option value="VHS">VHS</option>
+                            <option value="DVD">DVD</option>
+                            <option value="Streaming">Streaming</option>
+                        </select>
+                        </input>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Length</td>
+                    <td>Length:
+                        <input type="number" name="length" maxlength="4">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Year Released</td>
+                    <td>Year Released:
+                        <input type="number" name="release_year" maxlength="4">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Rating</td>
+                    <td>Rating:
+                        <input type="number" name="rating" maxlength="1">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"></td>
+                    <td>
+                        &nbsp;
+                        <input type="submit" name="submit" value="Save" class="save">
+                        <input type="button" name="cancel" value="Cancel" class="cancel" onClick="cancelAdd()">
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+
+    <%- include layouts/footer.ejs %>

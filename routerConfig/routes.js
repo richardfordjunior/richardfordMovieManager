@@ -3,10 +3,20 @@ const MongoClient = require('mongodb').MongoClient;
 const config = require('../config.js')
 let db = {};
 
+/*
+Handle all route request here...
+*/
+
+exports.home = (req, res)=> {
+  res.render('index.ejs', {
+    page_title: 'Home'
+  });
+}
+
 exports.list = (req, res) => {
   MongoClient.connect(config.cloudDatabase.host)
     .then((client) => {
-      console.log('Connected to rf-mongo fro GET call.');
+      console.log('Connected to rf-mongo for GET call.');
       db = client.db('rf-mongo')
     })
     .then(() => {
@@ -114,31 +124,31 @@ exports.edit_post = (req, res) => {
     })
 }
 
-exports.delete = (req, res)=>{
-  MongoClient.connect(config.cloudDatabase.host)
-  .then((client) => {
-    console.log('Connected to rf-mongo for DELETE call.');
-    db = client.db('rf-mongo')
-  })
-  .then(()=>{
-    return db.collection('movies').findOneAndDelete({ name: req.body.title }).then(() => {
-      console.log(`Record deleted with success!`);
+exports.delete = (req, res) => {
+  MongoClient.connect(config.cloudDatabase.host, { useNewUrlParser: true })
+    .then((client) => {
+      console.log('Connected to rf-mongo for DELETE call.');
+      db = client.db('rf-mongo')
     })
-    .then(()=>{
-     return db.collection('movies').find().toArray((err, results) => {
-        if (err) {
-          return err;
-        } else {
-          res.render('movies.ejs', { page_title: 'Movies', data: results });
-        }
+    .then(() => {
+      db.collection('movies').findOneAndDelete({ title: req.params.title }).then(() => {
+        console.log(`Record ${req.params.title} deleted with success!`);
       })
+        .then(() => {
+          return db.collection('movies').find().toArray((err, results) => {
+            if (err) {
+              return err;
+            } else {
+              res.render('movies.ejs', { page_title: 'Movies', data: results });
+            }
+          })
+        })
+        .catch((err) => {
+          throw new Error(err);
+        });
     })
-    .catch((err) => {
-      throw new Error(err);
+    .catch((e) => {
+      console.log(e);
     });
-  })
-  .catch((e)=>{
-   console.log(e);
-  });
 }
 

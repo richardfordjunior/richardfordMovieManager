@@ -1,12 +1,29 @@
-<html>
+<%- include layouts/header.ejs %>
+    <html>
+
     <head>
-        
-        <title><%=(locals.title) ? title :''%></title>
-    
+
+        <title>
+            <%=(locals.title) ? title :''%>
+        </title>
+        <script>
+            $('.enter_link').click(function () {
+                $(this).parent('#splashscreen').fadeOut(50);
+            });
+        </script>
     </head>
+
     <body>
-    
-        <h2>Hello world<h2>
+        <div id="splashscreen">
+            <h3> Welcome to the Movies database!!!<h3/>
+          <a href="/movies">
+            <img src="https://static.wixstatic.com/media/2cd43b_b1f546ef088c451cb67a5f3aca27fa7d~mv2.png?dn=" 
+            alt="You should be viewing a picture, and not the words :-("
+           />
+          </a>
+        </div>
     </body>
 
-</html>
+    </html>
+
+    <%- include layouts/footer.ejs %>

@@ -19,8 +19,9 @@ app.use(bodyParser.json());
 
 app.set('view engine', 'ejs');
 
+app.get('/',routeConfig.home);
 app.get('/movies',routeConfig.list);
-app.post('/add',routeConfig.add);
+app.use('/add',routeConfig.add);
 app.get('/edit/:title',routeConfig.edit_get);
 app.post('/edit/:title',routeConfig.edit_post);
 app.use('/delete/:title',routeConfig.delete);
