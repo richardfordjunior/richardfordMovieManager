@@ -3,44 +3,63 @@
         function cancelAdd() {
             window.location.href = '/movies';
         }
+        function validateForm() {
+            var pass = false;
+            var ae = document.activeElement;
+            var doc = document.forms["addForm"];
+            if (doc["title"].value.length > 50) {
+                alert("Title length must be less than 50 characters.");
+                pass = true;
+            }
+            doc["submit"].disabled = pass;
+        }
     </script>
     <div class="page-data">
 
-        <form role="form" method="POST" action="/edit/<%=data[0].title%>">
+        <form role="form" method="POST" action="/edit/<%=data[0].title%>" onsubmit="validateForm()">
             <table class="table table-striped" cellpadding="11">
                 <tr>
                     <td class="label">Title</td>
                     <td>Title:
-                        <input type="text" value="<%=data[0].title%>" name="title" required>
+                        <input type="text" value="<%=data[0].title%>" name="title" max="50" onblur="validateForm()" required>
                     </td>
                 </tr>
                 <tr>
                     <td class="label">Format:</td>
                     <td>Format:
                         <select class="formatPicker" name="formatPicker"
-                            value="<%=data[0].format%>" selected="true">
-                            <option value="<%=data[0].format%>"></option>VHS</option>
-                            <option value="<%=data[0].format%>" ></option>DVD</option>
-                            <option value="<%=data[0].format%>"></option>Streaming</option>
+                            value="<%=data[0].format%>" selected="selected">
+                            <option value="VHS">VHS</option>
+                            <option value="DVD">DVD</option>
+                            <option value="Streaming">Streaming</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td class="label">Length</td>
                     <td>Length:
-                        <input type="number" value="<%=data[0].length%>" name="length" maxlength="1">
+                        <input type="number" value="<%=data[0].length%>" name="length" max="500" maxlength="1">minutes
                     </td>
                 </tr>
                 <tr>
                     <td class="label">Year Released</td>
                     <td>Year Released:
-                        <input type="number" value="<%=data[0].release_year%>" name="release_year" maxlength="4">
+                        <input type="number" value="<%=data[0].release_year%>" min="1800" max="2100"  name="release_year" maxlength="4">
                     </td>
                 </tr>
                 <tr>
                     <td class="label">Rating</td>
                     <td>Rating:
-                        <input type="number" value="<%=data[0].rating%>" name="rating" maxlength="1">
+                        <!--<input type="number" value="<%=data[0].rating%>" name="rating" maxlength="1">-->
+                        <fieldset id="ratingSystem">
+                                <span class="star-cb-group">
+                                  <input type="radio" id="rating-5" name="rating" value="<%=data[0].rating%>"  checked="<%=data[0].rating%> ? checked=true: ''" /><label for="rating-5">5</label>
+                                  <input type="radio" id="rating-4" name="rating" value="<%=data[0].rating%>"  checked="<%=data[0].rating%> ? checked=true: ''" /><label for="rating-4">4</label>
+                                  <input type="radio" id="rating-3" name="rating" value="<%=data[0].rating%>"  checked="<%=data[0].rating%> ? checked=true: ''" /><label for="rating-3">3</label>
+                                  <input type="radio" id="rating-2" name="rating" value="<%=data[0].rating%>"  checked="<%=data[0].rating%> ? checked=true: ''" /><label for="rating-2">2</label>
+                                  <input type="radio" id="rating-1" name="rating" value="<%=data[0].rating%>"  checked="<%=data[0].rating%> ? checked=true: ''"  /><label for="rating-1">1</label>
+                                </span>
+                        </fieldset>
                     </td>
                 </tr>
 

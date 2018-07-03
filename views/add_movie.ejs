@@ -3,31 +3,29 @@
         function cancelAdd() {
             window.location.href = '/movies';
         }
+        function redirect(){
+            window.location.href = '/movies';
+            return false;
+        }
         function validateForm() {
+            var pass = false;
+            var ae = document.activeElement;
             var doc = document.forms["addForm"];
             if (doc["title"].value.length > 50) {
                 alert("Title length must be less than 50 characters.");
-                window.location.href = '/add';
-                return false;
-            } else if (doc["length"].value.length > 500) {
-                alert("Film length must be less than 500 minutes.");
-                window.location.href = '/add';
-                return false;
-            } else if (doc["release_year"].value.length > 1800 && doc["release_year"].value.length < 2100) {
-                alert("Release Year must be between 1800 and 2100.");
-                window.location.href = '/add';
-                return false;
+                pass = true;
             }
+            doc["submit"].disabled = pass;
         }
     </script>
     <div class="page-data">
 
-        <form role="form" method="POST" action="/add" name="addForm" onsubmit="return validateForm();">
+        <form role="form" method="POST" action="/add" name="addForm" onsubmit="return redirect()">
             <table cellpadding="11" class="table table-striped">
                 <tr>
                     <td class="label">Title</td>
                     <td>Title:
-                        <input type="text " name="title" required>
+                        <input type="text" name="title" max="50" onblur="validateForm()" required>
                     </td>
                 </tr>
                 <tr>
@@ -44,19 +42,32 @@
                 <tr>
                     <td class="label">Length</td>
                     <td>Length:
-                        <input type="number" name="length" maxlength="4">
+                        <input type="number" name="length" maxlength="4" max="500" required> minutes
                     </td>
                 </tr>
                 <tr>
                     <td class="label">Year Released</td>
                     <td>Year Released:
-                        <input type="number" name="release_year" maxlength="4">
+                        <input type="number" name="release_year" min="1800" max="2100" maxlength="4" required>
                     </td>
                 </tr>
                 <tr>
                     <td class="label">Rating</td>
                     <td>Rating:
-                        <input type="number" name="rating" maxlength="1">
+                        <fieldset id="ratingSystem">
+                            <span class="star-cb-group">
+                                <input type="radio" id="rating-5" name="rating" value="5" />
+                                <label for="rating-5">5</label>
+                                <input type="radio" id="rating-4" name="rating" value="4" />
+                                <label for="rating-4">4</label>
+                                <input type="radio" id="rating-3" name="rating" value="3" />
+                                <label for="rating-3">3</label>
+                                <input type="radio" id="rating-2" name="rating" value="2" />
+                                <label for="rating-2">2</label>
+                                <input type="radio" id="rating-1" name="rating" value="1" checked />
+                                <label for="rating-1">1</label>
+                            </span>
+                        </fieldset>
                     </td>
                 </tr>
                 <tr>
