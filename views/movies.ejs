@@ -2,11 +2,13 @@
        <script>
          function addMovie(){
           window.location.href = '/add';
+          return false;
          }
          function cancelAdd(){
           window.location.href = '/';
          }
        </script>
+     
        <script>
        $(document).ready(function() {
         $('#movieTable').DataTable();

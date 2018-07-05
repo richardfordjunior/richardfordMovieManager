@@ -20,7 +20,7 @@
     </script>
     <div class="page-data">
 
-        <form role="form" method="POST" action="/add" name="addForm" onsubmit="return redirect()">
+        <form role="form" method="POST" action="/add" name="addForm" onsubmit="validateForm();">
             <table cellpadding="11" class="table table-striped">
                 <tr>
                     <td class="label">Title</td>
@@ -28,7 +28,7 @@
                         <input type="text" name="title" max="50" onblur="validateForm()" required>
                     </td>
                 </tr>
-                <tr>
+                <tr>    
                     <td class="label" valign="top">Format</td>
                     <td valign="top">Format:
                         <select class="formatPicker" name="formatPicker">

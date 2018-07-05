@@ -1,7 +1,9 @@
 'use strict';
 const MongoClient = require('mongodb').MongoClient;
 const config = require('../config.js')
+const _ = require('lodash');
 let db = {};
+const util = require('../utils/common');
 
 /*
 Handle all route request here...
@@ -20,10 +22,11 @@ exports.list = (req, res) => {
       db = client.db('rf-mongo')
     })
     .then(() => {
-      db.collection('movies').find().toArray((err, results) => {
+      db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
         if (err) {
           return err;
         } else {
+          util.formatMovieLength(results);
           res.render('movies.ejs', { page_title: 'Movies', data: results });
         }
       })
@@ -53,10 +56,18 @@ exports.add = (req, res) => {
     })
     .then(() => {
       if (movieObject.title !== undefined) {
-        db.collection('movies').save(movieObject)
+        return db.collection(config.cloudDatabase.collections.movies).save(movieObject)
           .then(() => {
             console.log(`Saved ${JSON.stringify(movieObject)} to database.`);
-          })
+            // db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
+            //   if (err) {
+            //     return err;
+            //   } else {
+            //     util.formatMovieLength(results);
+            //     res.render('movies.ejs', { page_title: 'Movies', data: results });
+            //   }
+            // })
+          })   
           .catch((err) => {
             throw new Error(err);
           });
@@ -74,7 +85,7 @@ exports.edit_get = (req, res) => {
       db = client.db('rf-mongo')
     })
     .then(() => {
-      db.collection('movies').find({ title: req.params.title }).toArray()
+      db.collection(config.cloudDatabase.collections.movies).find({ title: req.params.title }).toArray()
         .then((resultsToUpdate) => {
           res.render('edit_movie.ejs', {
             page_title: 'Edit Movie', data: resultsToUpdate
@@ -97,27 +108,30 @@ exports.edit_post = (req, res) => {
       db = client.db('rf-mongo')
     })
     .then(() => {
-      db.collection('movies').update(
+      db.collection(config.cloudDatabase.collections.movies).update(
         { title: req.body.title },
         {
           $set: {
             title: req.body.title,
-            format: req.body.format,
+            format: req.body.formatPicker,
             length: req.body.length,
             release_year: req.body.release_year,
             rating: req.body.rating,
             lastUpdatedDate: new Date()
           }
         }
-      ).then(() => {
-        console.log(`Record updated with success!`);
-        db.collection('movies').find().toArray((err, results) => {
+      ).then((updated) => {
+        if(updated.result.nModified===1){
+          console.log(`Record updated with success!`);
+        
+        db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
           if (err) {
             return err;
           } else {
             res.render('movies.ejs', { page_title: 'Movies', data: results });
           }
         })
+      }
       }).catch((err) => {
         throw new Error(err);
       });
@@ -131,11 +145,11 @@ exports.delete = (req, res) => {
       db = client.db('rf-mongo')
     })
     .then(() => {
-      db.collection('movies').findOneAndDelete({ title: req.params.title }).then(() => {
+      db.collection(config.cloudDatabase.collections.movies).findOneAndDelete({ title: req.params.title }).then(() => {
         console.log(`Record ${req.params.title} deleted with success!`);
       })
         .then(() => {
-          return db.collection('movies').find().toArray((err, results) => {
+          return db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
             if (err) {
               return err;
             } else {
