@@ -16,7 +16,6 @@ var corsOptions = {
 app.use(cors(corsOptions))
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-
 app.set('view engine', 'ejs');
 
 app.get('/',routeConfig.home);
@@ -25,6 +24,7 @@ app.use('/add',routeConfig.add);
 app.get('/edit/:title',routeConfig.edit_get);
 app.post('/edit/:title',routeConfig.edit_post);
 app.use('/delete/:title',routeConfig.delete);
+app.get('/default/',routeConfig.default);
 
 app.listen(config.server.port, () => {
   console.log(`Server listening on port ${config.server.port} at ${new Date()}!!!`);

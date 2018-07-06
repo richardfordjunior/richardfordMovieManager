@@ -1,84 +1,161 @@
 <%- include layouts/header.ejs %>
-       <script>
-         function addMovie(){
-          window.location.href = '/add';
-          return false;
-         }
-         function cancelAdd(){
-          window.location.href = '/';
-         }
-       </script>
-     
-       <script>
-       $(document).ready(function() {
-        $('#movieTable').DataTable();
-        $('.dataTables_wrapper').find('label').each(function() {
-          $(this).parent().append($(this).children());
-        });
-        $('.dataTables_filter').find('input').each(function() {
-          $('input').attr("placeholder", "Search");
-          $('input').removeClass('form-control-sm');
-        });
-        $('.dataTables_length').addClass('d-flex flex-row');
-        $('.dataTables_filter').addClass('md-form');
-        $('select').addClass('mdb-select');
-        $('.mdb-select').material_select();
-        $('.mdb-select').removeClass('form-control form-control-sm');
-        $('.dataTables_filter').find('label').remove();
+
+  <script>
+    function showHide() {
+      var div = document.getElementById("divMovie");
+      var btn = document.getElementById("btnAddMovie");
+      if (div.style.display === "none") {
+        div.style.display = "block";
+      } else {
+        div.style.display = "none";
+      }
+    }
+
+    function cancelAdd() {
+      window.location.href = '/movies';
+    }
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $('#movieTable').DataTable();
+      $('.dataTables_wrapper').find('label').each(function () {
+        $(this).parent().append($(this).children());
       });
-      </script>
-        <div class="page-data">
-         <div class="data-btn">
-           <button onClick="addMovie();">+ Add Movie</button>
-         </div>
-         <br>
-     
-         <div class="data-table">
-            <table id="movieTable" class="table table-striped table-bordered table-responsive-md" border="1" cellpadding="7" cellspacing="7">
-             <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Format</th>
-                    <th>Length</th>
-                    <th>Year Released</th>
-                    <th>Rating</th>
-                    <th>Last Updated</th>
-                    <th width="120px">Action</th>
-                </tr>
-             </thead>
-                               
-                <% if(data.length){ 
-                                
+      $('.dataTables_filter').find('input').each(function () {
+        $('input').attr("placeholder", "");
+        $('input').removeClass('form-control-sm');
+      });
+      $('.dataTables_length').addClass('d-flex flex-row');
+      $('.dataTables_filter').addClass('md-form');
+      $('.dataTables_filter').find('label').remove();
+    });
+  </script>
+  <div class="page-data">
+    <div class="data-btn">
+      <tr>
+        <input type="button" name="btnAddMovie" value="Add Movie" class="class=" onClick="showHide()">
+      </tr>
+    </div>
+    <br>
+    <!--Add Movie-->
+    <div id="divMovie" style="display: none;">
+      <form role="form" method="POST" action="/add" name="addForm" onsubmit="validateForm">
+        <table cellpadding="11" class="table table-striped">
+          <tr>
+            <td>Title:
+              <input type="text" name="title" max="50" required>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">Format:
+              <select class="formatPicker" name="formatPicker">
+                <option value="VHS">VHS</option>
+                <option value="DVD">DVD</option>
+                <option value="Streaming">Streaming</option>
+              </select>
+              </input>
+            </td>
+          </tr>
+          <tr>
+            <td>Length:
+              <input type="number" name="length" maxlength="3" max="500" required> minutes
+            </td>
+          </tr>
+          <tr>
+            <td>Year Released:
+              <input type="number" name="release_year" min="1800" max="2100" maxlength="4" required>
+            </td>
+          </tr>
+          <tr>
+            <td>Rating:
+              <fieldset id="ratingSystem">
+                <span class="star-cb-group">
+                  <input type="radio" id="rating-5" name="rating" value="5" />
+                  <label for="rating-5">5</label>
+                  <input type="radio" id="rating-4" name="rating" value="4" />
+                  <label for="rating-4">4</label>
+                  <input type="radio" id="rating-3" name="rating" value="3" />
+                  <label for="rating-3">3</label>
+                  <input type="radio" id="rating-2" name="rating" value="2" />
+                  <label for="rating-2">2</label>
+                  <input type="radio" id="rating-1" name="rating" value="1" checked />
+                  <label for="rating-1">1</label>
+                </span>
+              </fieldset>
+            </td>
+          </tr>
+          <tr>
+            <td class="label"></td>
+            <td>
+              &nbsp;
+              <input type="submit" name="submit" value="Save" class="save">
+              <input type="button" name="cancel" value="Cancel" class="cancel" onClick="cancelAdd()">
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <!--End Add Movie-->
+
+    <div class="data-table">
+      <table id="movieTable" class="table table-striped table-bordered table-responsive-md" border="1" cellpadding="7" cellspacing="7">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Format</th>
+            <th>Length</th>
+            <th>Year Released</th>
+            <th>Rating</th>
+            <th>Last Updated</th>
+            <th width="120px">Action</th>
+          </tr>
+        </thead>
+
+        <% if(data.length){ 
+          
                  for(var i = 0;i < data.length;i++) { %>
-                 
-                <tr>
-                    <td><%=data[i].title%></td>
-                    <td><%=data[i].format%></td>
-                    <td><%=data[i].length%></td>
-                    <td><%=data[i].release_year%></td>
-                    <td><%=data[i].rating%></td>
-                    <td><%=data[i].lastUpdatedDate%></td>
-                    <td>
-                        <a class="a-inside edit" href="/edit/<%=data[i].title%>">Edit</a>
-                       
-                        <a class="a-inside delete" href="/delete/<%=data[i].title%>">Delete</a>
-                       
-                    </td>
-                </tr>
-            <% }
+
+          <tr>
+            <td>
+              <%=data[i].title%>
+            </td>
+            <td>
+              <%=data[i].format%>
+            </td>
+            <td>
+              <%=data[i].length%>
+            </td>
+            <td>
+              <%=data[i].release_year%>
+            </td>
+            <td>
+              <%=data[i].rating%>
+            </td>
+            <td>
+              <%=data[i].lastUpdatedDate%>
+            </td>
+            <td>
+              <a class="a-inside edit" href="/edit/<%=data[i].title%>">Edit</a>
+
+              <a class="a-inside delete" href="/delete/<%=data[i].title%>">Delete</a>
+
+            </td>
+          </tr>
+          <% }
             
              }else{ %>
-                 <tr>
-                    <td colspan="3">No Movies found.</td>
-                 </tr>
+            <tr>
+              <td colspan="3">No Movies found.</td>
+            </tr>
             <% } %>
-                
-                              
-                
-            </table>
-          
-         </div>
-     
-        </div>
-        
-<%- include layouts/footer.ejs %>
+
+
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <%- include layouts/footer.ejs %>

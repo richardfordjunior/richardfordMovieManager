@@ -38,7 +38,8 @@
                 <tr>
                     <td class="label">Title</td>
                     <td>Title:
-                        <input type="text" value="<%=data[0].title%>" name="title" max="50" required>
+                        <input id="storedTitle" type="hidden" value="<%=data[0].title%>">
+                        <input type="text" value="<%=data[0].title%>" name="title" max="50"  required>
                     </td>
                 </tr>
                 <tr>
@@ -55,7 +56,7 @@
                 <tr>
                     <td class="label">Length</td>
                     <td>Length:
-                        <input type="number" value="<%=data[0].length%>" name="length" max="500" maxlength="1"> minutes
+                        <input type="number" value="<%=data[0].length%>" name="length" maxlength="3" max="500"> minutes
                     </td>
                 </tr>
                 <tr>

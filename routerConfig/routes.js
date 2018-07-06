@@ -9,7 +9,7 @@ const util = require('../utils/common');
 Handle all route request here...
 */
 
-exports.home = (req, res)=> {
+exports.home = (req, res) => {
   res.render('index.ejs', {
     page_title: 'Home'
   });
@@ -37,10 +37,9 @@ exports.list = (req, res) => {
 };
 
 exports.add = (req, res) => {
-  res.render('add_movie.ejs', {
-    page_title: 'Add Movie'
-  });
-  let movieObject = {
+  let movieObject = {};
+  //Populate grid
+   movieObject = {
     title: req.body.title,
     format: req.body.formatPicker,
     length: req.body.length,
@@ -53,29 +52,32 @@ exports.add = (req, res) => {
     .then((client) => {
       console.log('Connected to rf-mongo for POST-ADD');
       db = client.db('rf-mongo')
+      db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
+        if (err) {
+          return err;
+        } else { 
+          //save the object
+          if (movieObject.title !== undefined) {
+            return db.collection(config.cloudDatabase.collections.movies).save(movieObject)
+              .then(() => {
+                console.log(`Saved ${JSON.stringify(movieObject)} to database.`);
+                db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
+                  if (err) {
+                    return err;
+                  } else {
+                    util.formatMovieLength(results);
+                    res.render('movies.ejs', { page_title: 'Movies', data: results });
+                    res.end();
+                  }
+                })
+              })
+              .catch((err) => {
+                throw new Error(err);
+              });
+          }
+        }
+      })
     })
-    .then(() => {
-      if (movieObject.title !== undefined) {
-        return db.collection(config.cloudDatabase.collections.movies).save(movieObject)
-          .then(() => {
-            console.log(`Saved ${JSON.stringify(movieObject)} to database.`);
-            // db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
-            //   if (err) {
-            //     return err;
-            //   } else {
-            //     util.formatMovieLength(results);
-            //     res.render('movies.ejs', { page_title: 'Movies', data: results });
-            //   }
-            // })
-          })   
-          .catch((err) => {
-            throw new Error(err);
-          });
-      }
-    })
-    .catch((e) => {
-      console.log(e);
-    });
 }
 
 exports.edit_get = (req, res) => {
@@ -121,17 +123,18 @@ exports.edit_post = (req, res) => {
           }
         }
       ).then((updated) => {
-        if(updated.result.nModified===1){
+        if (updated.result.nModified === 1) {
           console.log(`Record updated with success!`);
-        
-        db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
-          if (err) {
-            return err;
-          } else {
-            res.render('movies.ejs', { page_title: 'Movies', data: results });
-          }
-        })
-      }
+
+          db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
+            if (err) {
+              return err;
+            } else {
+              util.formatMovieLength(results);
+              res.render('movies.ejs', { page_title: 'Movies', data: results });
+            }
+          })
+        }
       }).catch((err) => {
         throw new Error(err);
       });
@@ -153,6 +156,7 @@ exports.delete = (req, res) => {
             if (err) {
               return err;
             } else {
+              util.formatMovieLength(results);
               res.render('movies.ejs', { page_title: 'Movies', data: results });
             }
           })
@@ -160,6 +164,28 @@ exports.delete = (req, res) => {
         .catch((err) => {
           throw new Error(err);
         });
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
+
+
+exports.default = (res, req) =>{
+  MongoClient.connect(config.cloudDatabase.host)
+    .then((client) => {
+      console.log('Connected to rf-mongo for GET call.');
+      db = client.db('rf-mongo')
+    })
+    .then(() => {
+      db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
+        if (err) {
+          return err;
+        } else {
+          util.formatMovieLength(results);
+          res.render('movies.ejs', { page_title: 'Movies', data: results });
+        }
+      })
     })
     .catch((e) => {
       console.log(e);
