@@ -16,6 +16,12 @@
   "bugs": {
     "url": "https://github.com/richardfordjunior/richardfordMovieManager/issues"
   },
+  "engines" : { "node" : ">=0.10.3 <0.12" },
+  "keywords":[],
+  "contributors": [
+    
+  ],
+
   "homepage": "https://github.com/richardfordjunior/richardfordMovieManager#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
