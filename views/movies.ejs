@@ -17,18 +17,22 @@
   </script>
 
   <script>
+  
     $(document).ready(function () {
       $('#movieTable').DataTable();
-      $('.dataTables_wrapper').find('label').each(function () {
-        $(this).parent().append($(this).children());
-      });
-      $('.dataTables_filter').find('input').each(function () {
-        $('input').attr("placeholder", "");
-        $('input').removeClass('form-control-sm');
-      });
-      $('.dataTables_length').addClass('d-flex flex-row');
-      $('.dataTables_filter').addClass('md-form');
-      $('.dataTables_filter').find('label').remove();
+      $('.dataTables_wrapper').find('label').each(function() {
+          $(this).parent().append($(this).children());
+        });
+        $('.dataTables_filter').find('input').each(function() {
+          $('input').attr("placeholder", "");
+          $('input').removeClass('form-control-sm');
+        });
+        $('.dataTables_length').addClass('d-flex flex-row');
+        $('.dataTables_filter').addClass('md-form');
+        $('select').addClass('mdb-select');
+        $('.mdb-select').material_select();
+        $('.mdb-select').removeClass('form-control form-control-sm');
+        $('.dataTables_filter').find('label').remove();
     });
   </script>
   <div class="page-data">
@@ -39,17 +43,18 @@
     </div>
     <br>
     <!--Add Movie-->
-    <div id="divMovie" style="display: none;">
-      <form role="form" method="POST" action="/add" name="addForm" onsubmit="validateForm">
+    <div id="divMovie" style="display:none;" align="center">
+      <form role="form" method="POST" action="/add" name="addForm" align="center" onsubmit="validateForm">
         <table cellpadding="11" class="table table-striped">
           <tr>
-            <td>Title:
-              <input type="text" name="title" max="50" required>
-            </td>
+            <td>
+             <input type="text" placeholder="Title" name="title" max="50"  required> 
+             </td>     
           </tr>
           <tr>
-            <td valign="top">Format:
+            <td valign="top">
               <select class="formatPicker" name="formatPicker">
+                <option value="">Select Format</option>
                 <option value="VHS">VHS</option>
                 <option value="DVD">DVD</option>
                 <option value="Streaming">Streaming</option>
@@ -58,13 +63,13 @@
             </td>
           </tr>
           <tr>
-            <td>Length:
-              <input type="number" name="length" maxlength="3" max="500" required> minutes
+            <td>
+             <input type="number" placeholder="Movie Length(min)" name="length" maxlength="3" max="500" required>
             </td>
           </tr>
           <tr>
-            <td>Year Released:
-              <input type="number" name="release_year" min="1800" max="2100" maxlength="4" required>
+            <td>
+              <input type="number" placeholder="Year Released" name="release_year" min="1800" max="2100" maxlength="4" required>
             </td>
           </tr>
           <tr>
@@ -117,6 +122,9 @@
                  for(var i = 0;i < data.length;i++) { %>
 
           <tr>
+            <td style="display:none;">
+              <%=data[i]._id%>
+            </td>
             <td>
               <%=data[i].title%>
             </td>
@@ -136,9 +144,9 @@
               <%=data[i].lastUpdatedDate%>
             </td>
             <td>
-              <a class="a-inside edit" href="/edit/<%=data[i].title%>">Edit</a>
+              <a class="a-inside edit" href="/edit/<%=data[i]._id%>">Edit</a>
 
-              <a class="a-inside delete" href="/delete/<%=data[i].title%>">Delete</a>
+              <a class="a-inside delete" href="/delete/<%=data[i]._id%>">Delete</a>
 
             </td>
           </tr>

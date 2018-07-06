@@ -1,5 +1,6 @@
 'use strict';
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectID;
 const config = require('../config.js')
 const _ = require('lodash');
 let db = {};
@@ -87,7 +88,7 @@ exports.edit_get = (req, res) => {
       db = client.db('rf-mongo')
     })
     .then(() => {
-      db.collection(config.cloudDatabase.collections.movies).find({ title: req.params.title }).toArray()
+      db.collection(config.cloudDatabase.collections.movies).find(ObjectId(req.params._id)).toArray()
         .then((resultsToUpdate) => {
           res.render('edit_movie.ejs', {
             page_title: 'Edit Movie', data: resultsToUpdate
@@ -104,41 +105,40 @@ exports.edit_get = (req, res) => {
 }
 
 exports.edit_post = (req, res) => {
-  MongoClient.connect(config.cloudDatabase.host)
-    .then((client) => {
-      console.log('Connected to rf-mongo for POST-EDIT call.');
-      db = client.db('rf-mongo')
-    })
-    .then(() => {
-      db.collection(config.cloudDatabase.collections.movies).update(
-        { title: req.body.title },
-        {
-          $set: {
-            title: req.body.title,
-            format: req.body.formatPicker,
-            length: req.body.length,
-            release_year: req.body.release_year,
-            rating: req.body.rating,
-            lastUpdatedDate: new Date()
-          }
+  return MongoClient.connect(config.cloudDatabase.host)
+  .then((client) => {
+    console.log('Connected to rf-mongo for POST-EDIT call.');
+    db = client.db('rf-mongo')
+  })
+  .then((record) => {
+   db.collection(config.cloudDatabase.collections.movies).update(
+      { _id: ObjectId(req.params._id)},
+      {
+        $set: {
+          title: req.body.title,
+          format: req.body.formatPicker,
+          length: req.body.length,
+          release_year: req.body.release_year,
+          rating: req.body.rating,
+          lastUpdatedDate: new Date()
         }
-      ).then((updated) => {
-        if (updated.result.nModified === 1) {
-          console.log(`Record updated with success!`);
-
-          db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
-            if (err) {
-              return err;
-            } else {
-              util.formatMovieLength(results);
-              res.render('movies.ejs', { page_title: 'Movies', data: results });
-            }
-          })
+      }
+    ).then((updated) => {
+      if(updated.result.nModified===1){
+        console.log(`Record updated with success!`);    
+        db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
+        if (err) {
+          return err;
+        } else {
+          util.formatMovieLength(results);
+          res.render('movies.ejs', { page_title: 'Movies', data: results });
         }
-      }).catch((err) => {
-        throw new Error(err);
-      });
-    })
+      })
+    }
+    }).catch((err) => {
+      throw new Error(err);
+    });
+  })
 }
 
 exports.delete = (req, res) => {
@@ -148,8 +148,8 @@ exports.delete = (req, res) => {
       db = client.db('rf-mongo')
     })
     .then(() => {
-      db.collection(config.cloudDatabase.collections.movies).findOneAndDelete({ title: req.params.title }).then(() => {
-        console.log(`Record ${req.params.title} deleted with success!`);
+      db.collection(config.cloudDatabase.collections.movies).remove({_id: ObjectId(req.params._id)}).then(() => {
+          console.log(`Record ${req.params._id} deleted with success!`);
       })
         .then(() => {
           return db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
@@ -169,26 +169,3 @@ exports.delete = (req, res) => {
       console.log(e);
     });
 }
-
-
-exports.default = (res, req) =>{
-  MongoClient.connect(config.cloudDatabase.host)
-    .then((client) => {
-      console.log('Connected to rf-mongo for GET call.');
-      db = client.db('rf-mongo')
-    })
-    .then(() => {
-      db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
-        if (err) {
-          return err;
-        } else {
-          util.formatMovieLength(results);
-          res.render('movies.ejs', { page_title: 'Movies', data: results });
-        }
-      })
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-}
-
