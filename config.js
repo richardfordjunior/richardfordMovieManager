@@ -15,7 +15,7 @@ var config = {
   },
   server: {
     host: '127.0.0.1',
-    port: '8081'
+    port: process.env.PORT || '8081'
   }
 }
 
