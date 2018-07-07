@@ -8,14 +8,15 @@
             
         </title>
         <script>
-            $('.enter_link').click(function () {
-                $(this).parent('#splashscreen').fadeOut(50);
+            $(document).ready(function() {
+            $("body").css("display", "none");
+            $("body").fadeIn(2000);
             });
         </script>
     </head>
 
     <body>
-        <div id="splashscreen" align="center">
+        <div align="center">
             <h1> Richard Movie Manager<h1/>
             <h3> Welcome to the Movies database!!!<h3/>
           <a href="/movies">
