@@ -18,7 +18,8 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
-app.get('/',routeConfig.home);
+app.get('/',routeConfig.login);
+app.get('/home',routeConfig.home);
 app.get('/movies',routeConfig.list);
 app.use('/add',routeConfig.add);
 app.get('/edit/:_id',routeConfig.edit_get);

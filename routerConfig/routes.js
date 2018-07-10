@@ -10,6 +10,10 @@ const util = require('../utils/common');
 Handle all route request here...
 */
 
+exports.login = (req, res) => {
+  res.render('login.ejs',{});
+}
+
 exports.home = (req, res) => {
   res.render('index.ejs', {
     page_title: 'Home'
