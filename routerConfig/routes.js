@@ -20,6 +20,24 @@ exports.home = (req, res) => {
   });
 }
 
+exports.getAllMovies = (req, res)=>{
+  MongoClient.connect(config.cloudDatabase.host)
+    .then((client) => {
+      console.log('Connected to rf-mongo for GET call.');
+      db = client.db('rf-mongo')
+    })
+    .then(() => {
+      db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
+        if (err) {
+          return err;
+        } else {
+          util.formatMovieLength(results);
+          return res.json(results);
+        }
+      })
+    })
+}
+
 exports.list = (req, res) => {
   MongoClient.connect(config.cloudDatabase.host)
     .then((client) => {
@@ -42,17 +60,9 @@ exports.list = (req, res) => {
 };
 
 exports.add = (req, res) => {
-  let movieObject = {};
   //Populate grid
-   movieObject = {
-    title: req.body.title,
-    format: req.body.formatPicker,
-    length: req.body.length,
-    release_year: req.body.release_year,
-    rating: req.body.rating,
-    lastUpdatedDate: new Date()
-  };
-
+  let movie = new Movie(req.body.title,req.body.length,req.body.release_year,req.body.rating, req.body.formatPicker);
+  
   MongoClient.connect(config.cloudDatabase.host)
     .then((client) => {
       console.log('Connected to rf-mongo for POST-ADD');
@@ -62,10 +72,10 @@ exports.add = (req, res) => {
           return err;
         } else { 
           //save the object
-          if (movieObject.title !== undefined) {
-            return db.collection(config.cloudDatabase.collections.movies).save(movieObject)
+          if (movie.title !== undefined) {
+            return db.collection(config.cloudDatabase.collections.movies).save(movie)
               .then(() => {
-                console.log(`Saved ${JSON.stringify(movieObject)} to database.`);
+                console.log(`Saved ${JSON.stringify(movie)} to database.`);
                 db.collection(config.cloudDatabase.collections.movies).find().toArray((err, results) => {
                   if (err) {
                     return err;
@@ -172,4 +182,15 @@ exports.delete = (req, res) => {
     .catch((e) => {
       console.log(e);
     });
+}
+
+class Movie {
+  constructor(title,length,release_year,rating,formatPicker){
+    this.title = title,
+    this.format = formatPicker,
+    this.length = length,
+    this.release_year = release_year,
+    this.rating = rating,
+    this.lastUpdatedDate = new Date();
+  }
 }
