@@ -25,7 +25,17 @@ app.use('/add',routeConfig.add);
 app.get('/edit/:_id',routeConfig.edit_get);
 app.post('/edit/:_id',routeConfig.edit_post);
 app.use('/delete/:_id',routeConfig.delete);
+app.get('/getAllMovies',routeConfig.getAllMovies);
 
-app.listen(config.server.port, () => {
-  console.log(`Server listening on port ${config.server.port} at ${new Date()}!!!`);
-});
+process.on('unhandledRejection',(err) =>{
+  console.log(err);
+  process.exit(1);
+})
+
+const init = async ()=> {
+ await app.listen(config.server.port, () => {
+    console.log(`Server listening on port ${config.server.port} at ${new Date()}!!!`);
+  });
+}
+
+init();
